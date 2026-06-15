@@ -45,9 +45,10 @@ Phrase progress updates as terse present-tense actions ("Fetching the quotas ref
 "Validating…", "Building…", "Authoring the survey…"), not "Let me…" or "Now let me…".
 
 Tool pre-approvals live in this skill's frontmatter and apply only while the skill is
-active; they do not survive a session resume. If survey work continues in a resumed
-session (or approved tools start prompting for permission), invoke this skill again
-before the next tool call.
+active; they do not survive a session resume or an MCP reconnect. If survey work continues
+in a resumed session, after re-authenticating or reconnecting the isvy server, or if
+approved tools start prompting for permission, invoke this skill again before the next
+tool call to re-arm them.
 
 ## Authoring SPL
 
@@ -116,6 +117,33 @@ succeeds.
    a required checkpoint even when you are mid-flow on a build.
 
 A per-survey override always wins ("use the modern theme for this one").
+
+## Naming
+
+A survey has two distinct name fields, and they are easy to confuse:
+
+- **`appid`** -- the survey's identifier. It appears in the admin and test URLs and is
+  effectively permanent. `create_survey` takes it as the `appid` argument; if you omit it,
+  the server auto-assigns a short random id (e.g. `q42e4`).
+- **`appdesc`** -- the human-readable title/description. Separate field, freely editable.
+
+Rules:
+
+- **When the user gives the survey an explicit name** ("name it `project_ascend`", "call it
+  BCG_2026_VMS"), that name is the **`appid`**. Pass it as `create_survey(appid=...)`. Do
+  NOT let the appid auto-allocate and bury their name in `appdesc` -- clients with naming
+  conventions mean the identifier, and a random id is not what they asked for.
+- **Validate the name as an appid first.** A legal appid is made only of letters, digits,
+  `_`, and `- : @ . + * !`, and must not end in a version-like `-12` or language-like
+  `-eng` suffix. If the user's name does not qualify, tell them why and offer a sanitized
+  version (or a different field); never silently substitute your own id.
+- **If the chosen appid already exists on the server, STOP and tell the user.** Never fall
+  back to a random id. Let them pick another name or decide to edit the existing survey.
+- **Set `appdesc` from the document's title** (a readable title like "Project Ascend
+  Consumer Survey") when the spec has one; otherwise reuse the name. Show both the appid
+  and the appdesc in your summary so the user sees exactly what each was set to.
+- **Only when the user gives no name**, let the appid auto-allocate and derive a readable
+  `appdesc` from the spec.
 
 ## Building a new survey
 
