@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "isvy": {
+      "type": "http",
+      "url": "https://${user_config.server_name}/mcp",
+      "timeout": 30000
+    }
+  }
+}

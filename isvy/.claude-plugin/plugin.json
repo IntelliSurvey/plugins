@@ -1,0 +1,21 @@
+{
+  "name": "isvy",
+  "version": "0.7.8",
+  "description": "IntelliSurvey AI survey authoring tools for Claude Code",
+  "author": {
+    "name": "IntelliSurvey"
+  },
+  "userConfig": {
+    "server_name": {
+      "type": "string",
+      "title": "IntelliSurvey server",
+      "description": "Hostname of your IntelliSurvey server, e.g. acme.intellisurvey.com (https:// and /mcp are added automatically)",
+      "required": true
+    },
+    "default_theme": {
+      "type": "string",
+      "title": "Default survey theme",
+      "description": "Theme id used for new surveys (optional). Leave unset to be asked on your first build; the choice can be saved here."
+    }
+  }
+}
